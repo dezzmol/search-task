@@ -1,23 +1,25 @@
 import "./styles.css";
 import {useEffect, useState} from "react";
 import {useSearch} from "../SearchResults/SearchContext.ts";
+import {debounce} from "../debounce/debouncFunc.ts";
 
 export function SearchForm() {
     const { setSearchTerm, setSearchResults } = useSearch();
     const [inputValue, setInputValue] = useState('');
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const response = await fetch(`https://dummyjson.com/users/search?q=${inputValue}`);
-            const data = await response.json();
-            setSearchResults(data);
-        };
+    const fetchData = async () => {
+        const response = await fetch(`https://dummyjson.com/users/search?q=${inputValue}`);
+        const data = await response.json();
+        setSearchResults(data);
+    };
 
+    const debouncedFetchData = debounce(fetchData, 500);
+
+    useEffect(() => {
         if (inputValue === '') {
             fetchData();
         } else {
-            const timeoutId = setTimeout(() => fetchData(), 300);
-            return () => clearTimeout(timeoutId);
+            debouncedFetchData();
         }
     }, [inputValue, setSearchResults]);
 
