@@ -1,13 +1,20 @@
 import "./style.css";
+import {User} from "../types/User.ts";
+import {FC} from "react";
 
-export function UserCard(props) {
-  return (
-    <div className="userCard">
-      <img className="userPic" src={props.image} />
-      <div className="userInfo">
-        <div>{`${props.firstName} ${props.lastName}`}</div>
-        <div>{props.address.city}</div>
-      </div>
-    </div>
-  );
+interface Props {
+    user: User
+}
+
+export const UserCard: FC<Props> = ({user}) => {
+
+    return (
+        <div className="userCard">
+            <img className="userPic" src={user.image}/>
+            <div className="userInfo">
+                <div>{`${user.firstName} ${user.lastName}`}</div>
+                <div>{user.address.city}</div>
+            </div>
+        </div>
+    );
 }
