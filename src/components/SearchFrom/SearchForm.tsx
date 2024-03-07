@@ -8,9 +8,19 @@ export function SearchForm() {
     const [inputValue, setInputValue] = useState('');
 
     const fetchData = async () => {
-        const response = await fetch(`https://dummyjson.com/users/search?q=${inputValue}`);
-        const data = await response.json();
-        setSearchResults(data);
+        try {
+            const response = await fetch(`https://dummyjson.com/users/search?q=${inputValue}`);
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const data = await response.json();
+            setSearchResults(data);
+        } catch (e) {
+            console.error("Failed to fetch users:", e);
+        }
+
     };
 
     const debouncedFetchData = debounce(fetchData, 500);
